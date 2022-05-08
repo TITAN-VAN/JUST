@@ -23,12 +23,12 @@ def clock_in(uname, passwd, name, Location):
     # 请求门户网站，获取授权
     i = 1
     while i < 5:
-        print('这是第' + str(i) + '次尝试登陆门户网站')
-        bro.get('http://ids2.just.edu.cn/cas/login?service=http%3A%2F%2Fmy.just.edu.cn%2F')
-        sleep(2)
-        bro.get('http://ids2.just.edu.cn/cas/login?service=http%3A%2F%2Fmy.just.edu.cn%2F')
-        sleep(5)
         try:
+            print('这是第' + str(i) + '次尝试登陆门户网站')
+            bro.get('http://ids2.just.edu.cn/cas/login?service=http%3A%2F%2Fmy.just.edu.cn%2F')
+            sleep(2)
+            bro.get('http://ids2.just.edu.cn/cas/login?service=http%3A%2F%2Fmy.just.edu.cn%2F')
+            sleep(5)
             username_btn = bro.find_element_by_xpath(
                 '/html/body/div[2]/div[1]/div[2]/div/div[1]/div/div/form[1]/div[2]/input')
             password_btn = bro.find_element_by_xpath(
@@ -51,7 +51,7 @@ def clock_in(uname, passwd, name, Location):
                 '/html/body/div/div[1]/div[1]/div/div[1]/div[2]/div/div/div/div/div/div/div/li[6]/span').text #get_attribute("textContent")
         except:
             i = i + 1
-            print('第' + str(i - 1) + '次登录门户网站失败')
+            print('第' + str(i-1) + '次登录门户网站失败')
         else:
             if "退出" in out:
                 print('信息门户登录完成')
@@ -71,8 +71,7 @@ def clock_in(uname, passwd, name, Location):
             bro.execute_script(js)
         except:
             print("第" + str(j) + "访问打卡页面失败,原因未知，截图已保存")
-            if j == 1:
-                bro.get_screenshot_as_file(u"/root/screenshot/" + "failed" + str(j) + name + time_format() + ".png")
+            bro.get_screenshot_as_file(u"/root/screenshot/" + "failed" + str(j) + name + time_format() + ".png")
             j = j + 1
         else:
             print('已设置禁用')
@@ -86,7 +85,7 @@ def clock_in(uname, passwd, name, Location):
             submit_btn = bro.find_element_by_xpath('//*[@id="root"]/div/div[1]/div[2]/div[2]/button')
             submit_btn.click()
             print(name + '已提交')
-            sleep(1)
+            sleep(5)
             break
 
     # # 如果提交成功，(二次验证返回打卡成功)，通过判断div是否存在和捕获异常来实现
@@ -94,13 +93,14 @@ def clock_in(uname, passwd, name, Location):
         bro.find_element_by_xpath('//*[@id="root"]/div/div/p/div/p[2]/span')
     except NoSuchElementException:
         print(name + '二次确认打卡失败（也许）')
+        bro.get_screenshot_as_file(u"/root/screenshot/" + "2" + name + time_format() + ".png")
     else:
         text = bro.find_element_by_xpath('//*[@id="root"]/div/div/p/div/p[2]/span').text
         if '填报成功' in text:
             print(name + '二次确认打卡成功')
         else:
             print(name + '二次确认打卡失败,失败原因：' + text)
-
+    # 查询打卡结果
     print(name + "结束")
     print("——————————————————————————————————————————————————")
     bro.quit()
