@@ -36,7 +36,7 @@ def clock_in(uname, passwd, name, Location):
             username_btn.send_keys(uname)
             password_btn.send_keys(passwd)
             login_btn = bro.find_element_by_xpath(
-                '/html/body/div[2]/div[1]/div[2]/div/div[1]/div/div/form[1]/div[5]/input[4]')
+                '/html/body/div[2]/div[1]/div[2]/div/div[1]/div/div/form[1]/div[5]/input[5]')
             login_btn.click()
             sleep(2)
         except:
